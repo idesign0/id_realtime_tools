@@ -47,8 +47,8 @@ target_include_directories(realtime_tools PUBLIC
   $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include/realtime_tools>
 )
-ament_target_dependencies(realtime_tools PUBLIC ${THIS_PACKAGE_INCLUDE_DEPENDS})
-if(UNIX)
+target_link_libraries(realtime_tools PUBLIC rclcpp::rclcpp rclcpp_action::rclcpp_action rcpputils::rcpputils Threads::Threads Boost::boost)
+if(UNIX AND NOT APPLE)
   target_link_libraries(realtime_tools PUBLIC cap)
 endif()
 
@@ -61,8 +61,8 @@ target_include_directories(thread_priority PUBLIC
   $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include/realtime_tools>
 )
-ament_target_dependencies(thread_priority PUBLIC ${THIS_PACKAGE_INCLUDE_DEPENDS})
-if(UNIX)
+target_link_libraries(thread_priority PUBLIC rclcpp::rclcpp rclcpp_action::rclcpp_action rcpputils::rcpputils Threads::Threads)
+if(UNIX AND NOT APPLE)
   target_link_libraries(thread_priority PUBLIC cap)
 endif()
 
@@ -88,7 +88,14 @@ if(BUILD_TESTING)
   ament_add_gmock(lock_free_queue_tests test/lock_free_queue_tests.cpp)
 
   target_link_libraries(lock_free_queue_tests realtime_tools Boost::boost)
-  if(UNIX AND NOT APPLE)
+  if(WIN32)
+    # atomic is not found on Windows, but also not needed
+    target_link_libraries(lock_free_queue_tests realtime_tools Boost::boost)
+  elseif(APPLE)
+    # On macOS, atomic lib is generally not needed
+    target_link_libraries(lock_free_queue_tests realtime_tools Boost::boost)
+  else()
+    # without adding atomic, clang throws a linker error
     target_link_libraries(lock_free_queue_tests realtime_tools atomic)
   endif()
 
