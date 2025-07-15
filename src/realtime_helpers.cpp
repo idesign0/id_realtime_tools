@@ -92,8 +92,8 @@ bool lock_memory(std::string & message)
 
 std::pair<bool, std::string> lock_memory()
 {
-#ifdef _WIN32
-  return {false, "Memory locking is not supported on Windows."};
+#if defined(_WIN32) || defined(__APPLE__)
+  return {false, "Memory locking is not supported on Windows or MacOs."};
 #else
   auto is_capable = [](cap_value_t v) -> bool {
     bool rc = false;
@@ -143,8 +143,8 @@ std::pair<bool, std::string> set_thread_affinity(
   NATIVE_THREAD_HANDLE thread, const std::vector<int> & cores)
 {
   std::string message;
-#ifdef _WIN32
-  message = "Thread affinity is not supported on Windows.";
+#if defined(_WIN32) || defined(__APPLE__)
+  message = "Thread affinity is not supported on Windows or MacOS.";
   return std::make_pair(false, message);
 #else
   auto set_affinity_result_message = [](int result, std::string & msg) -> bool {
