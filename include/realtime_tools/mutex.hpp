@@ -52,12 +52,20 @@ struct recursive_mutex_type_t
 
 struct stalled_robustness_t
 {
+#ifdef PTHREAD_MUTEX_STALLED
   static constexpr int value = PTHREAD_MUTEX_STALLED;
+#else
+  static constexpr int value = 0;
+#endif
 };
 
 struct robust_robustness_t
 {
+#ifdef PTHREAD_MUTEX_ROBUST
   static constexpr int value = PTHREAD_MUTEX_ROBUST;
+#else
+  static constexpr int value = 0;
+#endif
 };
 /**
  * @brief A class template that provides a pthread mutex with the priority inheritance protocol
