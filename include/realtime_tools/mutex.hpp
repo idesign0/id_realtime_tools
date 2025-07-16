@@ -188,6 +188,12 @@ public:
       }
       std::cerr << "Mutex owner died, but the mutex is consistent now. This shouldn't happen!"
                 << std::endl;
+      return true;  // Mutex is now consistent, we can continue using it
+#else
+      std::cerr
+        << "Mutex owner died, but pthread_mutex_consistent is not supported on this platform."
+        << std::endl;
+#endif
     } else if (res == EDEADLK) {
       throw std::system_error(res, std::system_category(), "Deadlock detected");
     } else {
