@@ -1,10 +1,10 @@
-name: rosdoc2
+name: Kilted rosdoc2
 
 on:
   workflow_dispatch:
   pull_request:
     branches:
-      - master
+      - kilted
     paths:
       - doc/**
       - rosdoc2.yaml
