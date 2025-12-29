@@ -47,7 +47,7 @@ target_include_directories(realtime_tools PUBLIC
   $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include/realtime_tools>
 )
-target_link_libraries(realtime_tools PUBLIC rclcpp::rclcpp rclcpp_action::rclcpp_action rcpputils::rcpputils Threads::Threads Boost::boost)
+ament_target_dependencies(realtime_tools PUBLIC ${THIS_PACKAGE_INCLUDE_DEPENDS})
 if(UNIX AND NOT APPLE)
   target_link_libraries(realtime_tools PUBLIC cap)
 endif()
@@ -61,7 +61,7 @@ target_include_directories(thread_priority PUBLIC
   $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include/realtime_tools>
 )
-target_link_libraries(thread_priority PUBLIC rclcpp::rclcpp rclcpp_action::rclcpp_action rcpputils::rcpputils Threads::Threads)
+ament_target_dependencies(thread_priority PUBLIC ${THIS_PACKAGE_INCLUDE_DEPENDS})
 if(UNIX AND NOT APPLE)
   target_link_libraries(thread_priority PUBLIC cap)
 endif()
@@ -87,7 +87,7 @@ if(BUILD_TESTING)
 
   ament_add_gmock(lock_free_queue_tests test/lock_free_queue_tests.cpp)
 
-  target_link_libraries(lock_free_queue_tests realtime_tools Boost::boost)
+  target_link_libraries(lock_free_queue_tests realtime_tools ${Boost_LIBRARIES})
   if(UNIX AND NOT APPLE)
     target_link_libraries(lock_free_queue_tests atomic)
   endif()
